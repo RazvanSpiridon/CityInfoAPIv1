@@ -33,19 +33,24 @@ namespace CityInfoAPIv1.Controllers
         [Route("{cityId}")]
         public async Task<ActionResult<CityDto>> GetCity([FromRoute] Guid cityId)
         {
-            if (!await _cityService.CityExistsAsync(cityId))
-                return NotFound("City do not exist!");
+            var city = await _cityService.GetCityAsync(cityId);
+            
+            if (city.CityId == Guid.Empty)
+                return NotFound();
 
-            return Ok(await _cityService.GetCityAsync(cityId));
+            return Ok(city);
+
         }
         [HttpGet]
         [Route("GetCitiesWithPointsOfInterest/{cityId}")]
         public async Task<ActionResult<List<CityWithPointsDto>>> GetCitiyWithPointsOfInterest(Guid cityId)
         {
-            if (!await _cityService.CityExistsAsync(cityId))
-                return NotFound("City do not exist!");
+            var city = await _cityService.GetCityWithPointsOfInterestAsync(cityId);
 
-            return Ok(await _cityService.GetCityWithPointsOfInterestAsync(cityId));
+            if (city.CityName == null)
+                return NotFound();
+
+            return Ok(city);
         }
 
         [HttpPost]
@@ -58,19 +63,24 @@ namespace CityInfoAPIv1.Controllers
         [Route("{cityId}")]
         public async Task<ActionResult<CityDto>> UpdateCity([FromRoute] Guid cityId, CityDto cityDto)
         {
-            if (!await _cityService.CityExistsAsync(cityId))
-                return NotFound("City do not exist!");
+            var city = await _cityService.UpdateCityAsync(cityId, cityDto);
 
-            return Ok(await _cityService.UpdateCityAsync(cityId, cityDto));
+            if (city.CityId == Guid.Empty)
+                return NotFound();
+
+            return Ok(city);
         }
 
         [HttpDelete]
         [Route("{cityId}")]
-        public async Task<ActionResult<CityDto>> DeleteCity([FromRoute] Guid cityId)
+        public async Task<ActionResult> DeleteCity([FromRoute] Guid cityId)
         {
-            if (!await _cityService.CityExistsAsync(cityId))
-                return NotFound("City do not exist!");
-            return Ok(await _cityService.DeleteCityAsync(cityId));
+            var city = await _cityService.DeleteCityAsync(cityId);
+            if (city == -1)
+                return NotFound();
+
+            return Ok($"The city with id {cityId} was deleted");
+
         }
     }
 }

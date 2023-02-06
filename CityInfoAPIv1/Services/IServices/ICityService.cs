@@ -9,7 +9,7 @@ namespace CityInfoAPIv1.Services.IServices
         Task<CityDto> GetCityAsync(Guid cityId);
         Task<CityDto> AddCityAsync(CityDto cityDto);
         Task<CityDto> UpdateCityAsync(Guid cityId, CityDto cityDto);
-        Task<CityDto> DeleteCityAsync(Guid cityDto);
+        Task<int> DeleteCityAsync(Guid cityId);
         Task<List<CityWithPointsDto>> GetCitiesWithPointsOfInterestAsync();
         Task<CityWithPointsDto> GetCityWithPointsOfInterestAsync(Guid cityId);
 

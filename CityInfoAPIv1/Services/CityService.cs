@@ -37,18 +37,16 @@ namespace CityInfoAPIv1.Services
             return await _dbContext.Cities.AnyAsync(c =>c.CityId == cityId);
         }
 
-        public async Task<CityDto> DeleteCityAsync(Guid cityDto)
+        public async Task<int> DeleteCityAsync(Guid cityId)
         {
-            var city = await _dbContext.Cities.Where(c => c.CityId== cityDto).FirstOrDefaultAsync() ?? new City();
-            var pointsOfInterest = await _dbContext.PointsOfInterest.Where(p => p.CityId == cityDto).ToListAsync();
-            foreach (var pointOfInterest in pointsOfInterest)
+            var city = await _dbContext.Cities.FirstOrDefaultAsync(c => c.CityId == cityId) ?? new City();
+            if (city.CityId != Guid.Empty )
             {
-                _dbContext.PointsOfInterest.Remove(pointOfInterest);
+                _dbContext.Cities.Remove(city);
+                await _dbContext.SaveChangesAsync();
+                return 1;
             }
-            _dbContext.Cities.Remove(city);
-            await _dbContext.SaveChangesAsync();
-
-            return new CityDto(city.CityId, city.CityName, city.CityDescription);
+            return -1;
         }
 
         public async Task<List<CityDto>> GetCitiesAsync()
