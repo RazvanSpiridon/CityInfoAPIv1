@@ -1,4 +1,5 @@
-﻿using CityInfoAPIv1.Context;
+﻿
+using CityInfoAPIv1.Context;
 using CityInfoAPIv1.Entities;
 using CityInfoAPIv1.Models;
 using CityInfoAPIv1.Services.IServices;
@@ -69,6 +70,23 @@ namespace CityInfoAPIv1.Services
                 c.CityDescription,
                 c.PointsOfInterest
                 )).ToList();
+
+            //sau
+
+            //return await _dbContext.Cities
+            //    .Select(c => new CityWithPointsDto
+            //    {
+            //        CityName = c.CityName,
+            //        CityDescription = c.CityDescription,
+            //        PointsOfInterest = c.PointsOfInterest.Select(p => new PointOfInterest
+            //        {
+            //            PointOfInterestId = p.PointOfInterestId,
+            //            PointOfInterestName = p.PointOfInterestName,
+            //            PointOfInterestDescription = p.PointOfInterestDescription,
+            //            CityId = c.CityId,
+            //        }).ToList()
+            //    }).ToListAsync();
+
         }
 
         public async Task<CityDto> GetCityAsync(Guid cityId)
@@ -83,6 +101,22 @@ namespace CityInfoAPIv1.Services
             var city = await _dbContext.Cities.Where(c => c.CityId == cityId).Include(p => p.PointsOfInterest).FirstOrDefaultAsync() ?? new City();
 
             return new CityWithPointsDto(city.CityName, city.CityDescription, city.PointsOfInterest);
+
+            //sau
+
+            //return await _dbContext.Cities.Where(c => c.CityId == cityId).Include(p => p.PointsOfInterest)
+            //    .Select(c => new CityWithPointsDto
+            //    {
+            //        CityName = c.CityName,
+            //        CityDescription = c.CityDescription,
+            //        PointsOfInterest = c.PointsOfInterest.Select(p => new PointOfInterest
+            //        {
+            //            PointOfInterestId = p.PointOfInterestId,
+            //            PointOfInterestName = p.PointOfInterestName,
+            //            PointOfInterestDescription = p.PointOfInterestDescription,
+            //            CityId = cityId
+            //        }).ToList()
+            //    }).FirstOrDefaultAsync() ??  new CityWithPointsDto();
         }
 
         public async Task<CityDto> UpdateCityAsync(Guid cityId, CityDto cityDto)

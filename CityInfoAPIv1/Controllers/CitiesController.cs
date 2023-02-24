@@ -17,7 +17,7 @@ namespace CityInfoAPIv1.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<CityDto>> GetCities()
+        public async Task<ActionResult<List<CityDto>>> GetCities()
         {
             return Ok(await _cityService.GetCitiesAsync());
         }
